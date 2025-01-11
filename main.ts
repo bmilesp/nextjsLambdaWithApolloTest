@@ -1,5 +1,5 @@
 import { Construct } from "constructs";
-import { App, TerraformStack } from "cdktf";
+import { App, S3Backend, TerraformStack } from "cdktf";
 import { DataArchiveFile } from "@cdktf/provider-archive/lib/data-archive-file";
 import { join } from "path";
 import { LambdaFunction } from "@cdktf/provider-aws/lib/lambda-function";
@@ -10,16 +10,26 @@ import { AwsProvider } from '@cdktf/provider-aws/lib/provider'
 
 // lambda.ts
 import { ArchiveProvider } from "@cdktf/provider-archive/lib/provider"
+import { TFStateBackupStack } from "./tfStateBackup/TFStateBackupStack";
+
+const defaultRegion = "us-east-2";
 
 class MyStack extends TerraformStack {
-  constructor(scope: Construct, id: string) {
-    super(scope, id);
+  constructor(scope: Construct, name: string, backendStateS3BucketName: string) {
+    super(scope, name);
     new AwsProvider(this, "aws");
 
+
+    new S3Backend(this, {
+      bucket: backendStateS3BucketName,
+      key: name,
+      region: defaultRegion
+    })
+
     //lambda 
-    new ArchiveProvider(this, id+"_archive_provider")
-    const role = this.lambdaServiceRole(id);
-    this.CreateLambda(id, "my-app", id, role.arn);
+    new ArchiveProvider(this, name+"_archive_provider")
+    const role = this.lambdaServiceRole(name);
+    this.CreateLambda(name, "my-app/.next", name, role.arn);
   }
     // define resources here
   
@@ -93,7 +103,7 @@ class MyStack extends TerraformStack {
     new LambdaFunction(this, stackName+"-"+name, {
       functionName: "nextJsLambdaApolloTest",
       handler: "app.lambda_handler",
-      runtime: "python3.8",
+      runtime: "nodejs22.x",
       filename: zipFileName,
       sourceCodeHash : dataArchive.outputBase64Sha256,
       role: iamServiceRoleArn,
@@ -102,7 +112,17 @@ class MyStack extends TerraformStack {
 }
 
 
-
 const app = new App();
-new MyStack(app, "nextJsLambdaApolloTest");
+
+const tfStatebucketName = "nextjs-lambda-apollo-test-tf-state-backup-bucket"
+
+// TFStateBackupStack 
+new TFStateBackupStack(
+  app,
+  "tfStateBackupStack",
+  tfStatebucketName,
+  defaultRegion,
+  true
+)
+new MyStack(app, "nextJsLambdaApolloTest", tfStatebucketName);
 app.synth();
