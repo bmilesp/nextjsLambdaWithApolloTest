@@ -113,6 +113,54 @@
           "store_path": "/nix/store/cgkpjpl1hspg30dlmv4hhvlhbvik1bn1-nodejs-23.2.0"
         }
       }
+    },
+    "nodepackages.cdktf-cli@latest": {
+      "last_modified": "2024-12-23T21:10:33Z",
+      "resolved": "github:NixOS/nixpkgs/de1864217bfa9b5845f465e771e0ecb48b30e02d#nodePackages.cdktf-cli",
+      "source": "devbox-search",
+      "version": "0.20.8",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/g44k79kd7spqz7kl7a6dvssrbsv6a3ay-cdktf-cli-0.20.8",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/g44k79kd7spqz7kl7a6dvssrbsv6a3ay-cdktf-cli-0.20.8"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/8mdj1xyl13qdy9pmyivwpivnp7j80y23-cdktf-cli-0.20.8",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/8mdj1xyl13qdy9pmyivwpivnp7j80y23-cdktf-cli-0.20.8"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/zmnmfyps616cn8ym2g6465f6jb0a44s7-cdktf-cli-0.20.8",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/zmnmfyps616cn8ym2g6465f6jb0a44s7-cdktf-cli-0.20.8"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/c0hfl5gp4y2nxgp9wgv6yfsv85qbh8ya-cdktf-cli-0.20.8",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/c0hfl5gp4y2nxgp9wgv6yfsv85qbh8ya-cdktf-cli-0.20.8"
+        }
+      }
     }
   }
 }
