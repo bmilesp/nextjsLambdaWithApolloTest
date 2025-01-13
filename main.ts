@@ -11,6 +11,7 @@ import { AwsProvider } from '@cdktf/provider-aws/lib/provider'
 // lambda.ts
 import { ArchiveProvider } from "@cdktf/provider-archive/lib/provider"
 import { TFStateBackupStack } from "./tfStateBackup/TFStateBackupStack";
+import { LambdaFunctionUrl } from "@cdktf/provider-aws/lib/lambda-function-url";
 //import { LambdaLayers } from "./web/lambdaLayers";
 
 const defaultRegion = "us-east-2";
@@ -35,9 +36,11 @@ class MyStack extends TerraformStack {
     const lambdaLayersArns = [lambdaAdapterLayerArn]
     const handler = "run.sh"
     const envVars = {
-       AWS_LAMBDA_EXEC_WRAPPER: "/opt/bootstrap"
+       AWS_LAMBDA_EXEC_WRAPPER: "/opt/bootstrap",
+       PORT: 3000,
+      NODE_ENV: "production"
     }
-    this.CreateLambda(name, "my-app/.next", name, role.arn, lambdaLayersArns,  envVars, handler);
+    this.CreateLambda(name, "my-app/.next/standalone", name, role.arn, lambdaLayersArns,  envVars, handler);
   }
     // define resources here
   
@@ -108,7 +111,7 @@ class MyStack extends TerraformStack {
       outputPath: zipFileName
     })
     
-    new LambdaFunction(this, stackName+"-"+name, {
+    const lambdaFunction = new LambdaFunction(this, stackName+"-"+name, {
       layers: layerArns,
       functionName: "nextJsLambdaApolloTest",
       handler: handler,
@@ -120,6 +123,19 @@ class MyStack extends TerraformStack {
         variables: envVars
       }
     })
+
+    new LambdaFunctionUrl(this, "test_live", {
+      authorizationType: "NONE",
+      cors: {
+        allowCredentials: true,
+        allowHeaders: ["date", "keep-alive"],
+        allowMethods: ["*"],
+        allowOrigins: ["*"],
+        exposeHeaders: ["keep-alive", "date"],
+        maxAge: 86400,
+      },
+      functionName: lambdaFunction.functionName,
+    });
   }
 }
 
