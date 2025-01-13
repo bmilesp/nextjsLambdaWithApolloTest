@@ -11,6 +11,7 @@ import { AwsProvider } from '@cdktf/provider-aws/lib/provider'
 // lambda.ts
 import { ArchiveProvider } from "@cdktf/provider-archive/lib/provider"
 import { TFStateBackupStack } from "./tfStateBackup/TFStateBackupStack";
+//import { LambdaLayers } from "./web/lambdaLayers";
 
 const defaultRegion = "us-east-2";
 
@@ -29,7 +30,13 @@ class MyStack extends TerraformStack {
     //lambda 
     new ArchiveProvider(this, name+"_archive_provider")
     const role = this.lambdaServiceRole(name);
-    this.CreateLambda(name, "my-app/.next", name, role.arn);
+    //const lambdaLayersResource = new LambdaLayers(this, name+"-lambdaLayers")
+    const lambdaAdapterLayerArn = "arn:aws:lambda:"+defaultRegion+":753240598075:layer:LambdaAdapterLayerX86:23"
+    const lambdaLayersArns = [lambdaAdapterLayerArn]
+    const envVars = {
+       AWS_LAMBDA_EXEC_WRAPPER: "/opt/bootstrap"
+    }
+    this.CreateLambda(name, "my-app/.next", name, role.arn, lambdaLayersArns,  envVars);
   }
     // define resources here
   
@@ -92,7 +99,7 @@ class MyStack extends TerraformStack {
 
   /* lambda.ts */
 
-  public CreateLambda(stackName:string, dirName:string, name: string, iamServiceRoleArn:any): any {
+  public CreateLambda(stackName:string, dirName:string, name: string, iamServiceRoleArn:any, layerArns:string[], envVars:any): any {
     const zipFileName = "my-app.zip"
     var dataArchive = new DataArchiveFile(this,name+"_webhooklambda_archive",{
       type: "zip",
@@ -101,12 +108,16 @@ class MyStack extends TerraformStack {
     })
     
     new LambdaFunction(this, stackName+"-"+name, {
+      layers: layerArns,
       functionName: "nextJsLambdaApolloTest",
       handler: "app.lambda_handler",
       runtime: "nodejs22.x",
       filename: zipFileName,
       sourceCodeHash : dataArchive.outputBase64Sha256,
       role: iamServiceRoleArn,
+      environment: {
+        variables: envVars
+      }
     })
   }
 }
