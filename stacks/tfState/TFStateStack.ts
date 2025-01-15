@@ -5,7 +5,7 @@ import { AwsProvider } from "@cdktf/provider-aws/lib/provider"
 import { Dynamodb as TFStateDynamoDb } from './infrastructure/aws/dynamodb'
 import { S3 } from "./infrastructure/aws/s3"
 
-export class TFStateBackupStack extends TerraformStack {
+export class TFStateStack extends TerraformStack {
     /* this stack is created to house the tfstate files remotely on S3 (for numerous reasons, 
       mainly to avoid syncing issues across multiple machines, and also for .gitignoring these 
       fles as they contain sensitive info) */
