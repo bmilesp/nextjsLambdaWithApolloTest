@@ -1,16 +1,16 @@
 import { App } from "cdktf";
 import { WebStack } from "./stacks/web/webStack";
-import { TFStateBackupStack } from "./stacks/tfStateBackup/TFStateBackupStack";
+import { TFStateStack } from "./stacks/tfState/TFStateStack";
 import { join } from "path";
 
 const defaultRegion = "us-east-2";
-const tfStatebucketName = "nextjs-lambda-apollo-test-tf-state-backup-bucket"
+const tfStatebucketName = "nextjs-lambda-apollo-test-tf-state-bucket"
 
 const app = new App();
 
-new TFStateBackupStack(
+new TFStateStack(
   app,
-  "tfStateBackupStack",
+  "tfStateStack",
   tfStatebucketName,
   defaultRegion,
   true

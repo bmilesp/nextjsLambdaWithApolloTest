@@ -15,7 +15,7 @@ export class Dynamodb extends Construct {
     }
 
     private createtfStateTable(stackName:string, tableName:string){
-        return new DynamodbTable(this, "tfState",{
+        return new DynamodbTable(this, "tf-state",{
             name : tableName,
             billingMode : "PAY_PER_REQUEST",
             hashKey : "LockID",

@@ -4,7 +4,10 @@
   "projectId": "4890c043-4e97-4859-9008-d6ae931bd918",
   "sendCrashReports": "true",
   "terraformProviders": [],
-  "terraformModules": [],
+  "terraformModules": [{
+    "source": "RJPearson94/open-next/aws",
+    "version": "3.1.0"
+  }],
   "context": {
 
   }
