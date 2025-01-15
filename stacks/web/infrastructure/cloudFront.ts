@@ -29,15 +29,11 @@ export class CloudFront extends Construct {
                 }
             }],
             defaultCacheBehavior: {
-                allowedMethods: ["GET", "HEAD"],
+                originRequestPolicyId: "b689b0a8-53d0-40ab-baf2-68738e2966ac", // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html
+                cachePolicyId: "4135ea2d-6df8-44a3-9df3-4b5a84be39ad", // https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html
+                allowedMethods: ["HEAD", "DELETE", "POST", "GET", "OPTIONS", "PUT", "PATCH"],
                 cachedMethods: ["GET", "HEAD"],
                 targetOriginId: originId,
-                forwardedValues: {
-                    queryString : true,
-                    cookies: {
-                        forward:"none"
-                    }
-                },
                 viewerProtocolPolicy: "redirect-to-https"
             },
             restrictions: {

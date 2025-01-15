@@ -35,7 +35,7 @@ export class Lambda extends Construct {
             }
         })
         const functionUrl = new LambdaFunctionUrl(this, "test_live", {
-            authorizationType: "NONE",
+            authorizationType: "AWS_IAM",
             cors: {
                 allowCredentials: true,
                 allowHeaders: ["date", "keep-alive"],

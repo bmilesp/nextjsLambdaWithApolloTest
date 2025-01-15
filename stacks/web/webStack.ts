@@ -6,6 +6,7 @@ import { Iam } from "./infrastructure/iam";
 import { Lambda } from "./infrastructure/lambda";
 import { CloudFront } from "./infrastructure/cloudFront";
 import { LambdaPermission } from "@cdktf/provider-aws/lib/lambda-permission";
+import { S3 } from "./infrastructure/s3";
 
 
 export class WebStack extends TerraformStack {
@@ -31,15 +32,18 @@ export class WebStack extends TerraformStack {
     }
     
     const lambda = new Lambda(this, name+"_lambda", runtimePath,  lambdaServiceRoleArn, [lambdaAdapterLayerArn], envVars, handler)
-    const domainUrl = lambda.lambdaFunctionUrl.id+".lambda-url."+region+".on.aws"
+    const domainUrl = lambda.lambdaFunctionUrl.urlId+".lambda-url."+region+".on.aws"
     const cloudFront = new CloudFront(this, name+"_cloudfront", lambda.lambdaFunction.id, domainUrl)
     
-    new LambdaPermission(this, "allow_cloudwatch", {
+    new LambdaPermission(this, "allow_cloudwatch_only", {
         action: "lambda:InvokeFunctionUrl",
         functionName: lambda.lambdaFunction.functionName,
         principal: "cloudfront.amazonaws.com",
         sourceArn: cloudFront.cloudfrontDistribution.arn,
         statementId: "AllowCloudFrontServicePrincipal",
-      });
+    });
+
+    const assetBucket = new S3(this, name+"_s3")
+    assetBucket.createAssetHostingBucket("nexyjs-app-asset-hosting-bucket", name)
   }
 }

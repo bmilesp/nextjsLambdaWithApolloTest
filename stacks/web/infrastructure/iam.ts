@@ -20,7 +20,7 @@ export class Iam extends Construct {
                     {
                         Effect: "Allow",
                         Principal: {
-                            Service: ["lambda.amazonaws.com", "edgelambda.amazonaws.com"]
+                            Service: ["lambda.amazonaws.com"]
                         },
                         Action: ["sts:AssumeRole"],
                     }
@@ -41,10 +41,6 @@ export class Iam extends Construct {
                         "logs:CreateLogGroup",
                         "logs:CreateLogStream",
                         "logs:PutLogEvents",
-                        'states:StartSyncExecution',
-                        'states:StartExecution',
-                        'dynamodb:GetItem',
-                        'dynamodb:Query'
                     ],
                     Resource: "*"
                 }]

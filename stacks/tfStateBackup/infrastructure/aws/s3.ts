@@ -9,14 +9,10 @@ import { Token } from 'cdktf';
 
 export class S3 extends Construct {
 
-    private _s3CloudfrontLoggingBucket: any
     private _tfStateBucket: any
 
     get tfStateBucket(){
         return this._tfStateBucket
-    }
-    get s3CloudfrontLoggingBucket(){
-        return this._s3CloudfrontLoggingBucket
     }
 
     constructor(scope: Construct, name: string, s3BucketName:string) {

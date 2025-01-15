@@ -6,8 +6,8 @@ export default function Home() {
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
+          src="http://nexyjs-app-asset-hosting-bucket.s3-website.us-east-2.amazonaws.com/s6pack-logo.png"
+          alt="s6pack.build logo"
           width={180}
           height={38}
           priority
